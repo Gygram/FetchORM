@@ -20,12 +20,14 @@ export class JoinBuilder<T> {
         try {
             this.logger.debug('Adding select attributes to join', { attributes });
 
-            this.link.attributes = attributes.map(attr => {
+            const newAttributes = attributes.map(attr => {
                 const attributeName = attr as string;
                 Validator.validateAttributeName(attributeName);
 
                 return { name: attributeName };
             });
+
+            this.link.attributes.push(...newAttributes);
 
             return this;
         } catch (error) {

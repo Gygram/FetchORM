@@ -36,12 +36,15 @@ export abstract class BaseEntity<T = any> {
         try {
             this.logger.debug('Adding select attributes', { attributes });
 
-            this.query.attributes = attributes.map(attr => {
+            const newAttributes = attributes.map(attr => {
                 const attributeName = attr as string;
                 Validator.validateAttributeName(attributeName);
 
                 return { name: attributeName };
             });
+
+            // Append new attributes instead of overwriting
+            this.query.attributes.push(...newAttributes);
 
             return this;
         } catch (error) {
@@ -216,6 +219,23 @@ export abstract class BaseEntity<T = any> {
     }
 
     /**
+     * Add group by clause
+     */
+    public groupBy(attribute: keyof T): this {
+        try {
+            const attributeName = attribute as string;
+            Validator.validateAttributeName(attributeName);
+
+            this.logger.debug('Adding group by', { attribute: attributeName });
+
+            return this;
+        } catch (error) {
+            this.logger.error('Failed to add group by', { error: (error as Error).message });
+            throw error;
+        }
+    }
+
+    /**
      * Join with related entity
      */
     public join<U>(
@@ -223,7 +243,7 @@ export abstract class BaseEntity<T = any> {
         fromAttribute: keyof T,
         toAttribute: string,
         alias?: string,
-        linkType: 'inner' | 'outer' = 'inner'
+        linkType?: 'inner' | 'outer'
     ): JoinBuilder<U> {
         try {
             Validator.validateEntityName(entityName);

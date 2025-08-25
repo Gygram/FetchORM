@@ -55,8 +55,8 @@ export class FetchXMLBuilder {
             xml += '<attribute';
             xml += ` name="${this.escapeXml(attr.name)}"`;
 
-            if (attr.alias) xml += ` alias="${this.escapeXml(attr.alias)}"`;
             if ('aggregate' in attr) xml += ` aggregate="${attr.aggregate}"`;
+            if (attr.alias) xml += ` alias="${this.escapeXml(attr.alias)}"`;
 
             xml += '/>';
         }
@@ -134,7 +134,7 @@ export class FetchXMLBuilder {
         xml += ` to="${this.escapeXml(link.to)}"`;
 
         if (link.alias) xml += ` alias="${this.escapeXml(link.alias)}"`;
-        if (link.linkType) xml += ` link-type="${link.linkType}"`;
+        if (link.linkType && link.linkType !== 'inner') xml += ` link-type="${link.linkType}"`;
 
         xml += '>';
 
@@ -142,8 +142,8 @@ export class FetchXMLBuilder {
             xml += '<attribute';
             xml += ` name="${this.escapeXml(attr.name)}"`;
 
-            if (attr.alias) xml += ` alias="${this.escapeXml(attr.alias)}"`;
             if ('aggregate' in attr) xml += ` aggregate="${attr.aggregate}"`;
+            if (attr.alias) xml += ` alias="${this.escapeXml(attr.alias)}"`;
             
             xml += '/>';
         }
